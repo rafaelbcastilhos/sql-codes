@@ -1,4 +1,3 @@
-
 SELECT * FROM tabela_de_clientes;
 
 SELECT ESTADO, LIMITE_DE_CREDITO FROM tabela_de_clientes;
@@ -26,4 +25,3 @@ SELECT ESTADO, BAIRRO, SUM(LIMITE_DE_CREDITO) AS LIMITE FROM tabela_de_clientes
 WHERE CIDADE = 'Rio de Janeiro' 
 GROUP BY ESTADO, BAIRRO
 ORDER BY BAIRRO;
-
