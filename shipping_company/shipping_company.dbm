@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.3-beta" use-changelog="false" last-position="0,228" last-zoom="0.65" max-obj-count="13"
+	 default-schema="public" default-owner="postgres">
+<role name="traceboxadmin">
+	<comment><![CDATA[Proprietário do projeto traceBOX]]></comment>
+</role>
+
+<role name="traceboxadmin_cp">
+	<comment><![CDATA[Proprietário do projeto traceBOX]]></comment>
+</role>
+
+<tablespace name="tracebox" directory="'tracebox'">
+	<role name="traceboxadmin"/>
+</tablespace>
+
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="transportadora" layer="0" rect-visible="true" fill-color="#ffffff">
+	<role name="traceboxadmin"/>
+	<comment><![CDATA[Schema para o database do "tracebox" server no PostgreSQL]]></comment>
+</schema>
+
+<table name="vehicle" layer="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="transportadora"/>
+	<role name="traceboxadmin"/>
+	<tablespace name="tracebox"/>
+	<position x="1487.56" y="363.847"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="license_plate" not-null="true">
+		<type name="varchar" length="7"/>
+		<comment><![CDATA[Placa do veículo. Ex: IXY-1234]]></comment>
+	</column>
+	<column name="manufacturer">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Fabricante do veículo.]]></comment>
+	</column>
+	<column name="model">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Modelo do veículo.]]></comment>
+	</column>
+	<column name="color">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Cor predominante do veículo.]]></comment>
+	</column>
+	<column name="category">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Categoria do veículo de carga. Exemplos comuns: VUC, caminhão, moto.]]></comment>
+	</column>
+	<constraint name="vehicle_pk" type="pk-constr" table="transportadora.vehicle">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="license_plate" type="uq-constr" table="transportadora.vehicle">
+		<columns names="license_plate" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="shipment" layer="0" collapse-mode="2" max-obj-count="8" z-value="0">
+	<schema name="transportadora"/>
+	<role name="traceboxadmin"/>
+	<tablespace name="tracebox"/>
+	<position x="1068.61" y="776.264"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="date">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="finished">
+		<type name="date" length="0"/>
+	</column>
+	<column name="state">
+		<type name="char" length="0"/>
+	</column>
+	<column name="shipper_id" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[Código do Emitente da Ordem de Entrega]]></comment>
+	</column>
+	<column name="destinator_id" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[Código do Destinatário da Ordem de Entrega]]></comment>
+	</column>
+	<column name="transporter_id" not-null="true">
+		<type name="integer" length="0"/>
+		<comment><![CDATA[Código do Transportador]]></comment>
+	</column>
+	<constraint name="shipment_pk" type="pk-constr" table="transportadora.shipment">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="transporter" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="transportadora"/>
+	<role name="traceboxadmin"/>
+	<tablespace name="tracebox"/>
+	<position x="1467.78" y="1274.17"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="company_name" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Razão Social da empresa]]></comment>
+	</column>
+	<column name="federal_tax" not-null="true">
+		<type name="varchar" length="14"/>
+		<comment><![CDATA[CNPJ ou Federal Tax ID.
+Por padrão a Matriz e Filiais podem ver os dados compartilhados entre si.
+Exemplo: XX.XXX.XXX/YYYY-ZZ
+Os oito primeiros números (XX.XXX.XXX) formam a "raiz", que identifica a empresa. Os quatro dígitos seguintes após a barra (YYYY) formam o sufixo, que identifica uma unidade de atuação de empresa, ou seja, um endereço de atividade da pessoa jurídica e os dois últimos, após o traço (ZZ) formam o "dígito verificador", que é resultado de uma equação com os doze números anteriores. Deste modo, os CNPJs no formato XX.XXX.XXX/0001-ZZ identificam a matriz da empresa.]]></comment>
+	</column>
+	<column name="email" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Email]]></comment>
+	</column>
+	<column name="phone" not-null="true">
+		<type name="varchar" length="13"/>
+		<comment><![CDATA[Telefone (Phone)]]></comment>
+	</column>
+	<constraint name="transporter_pk" type="pk-constr" table="transportadora.transporter">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="federal_tax14" type="uq-constr" table="transportadora.transporter">
+		<columns names="federal_tax" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="email" type="uq-constr" table="transportadora.transporter">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="client" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="transportadora"/>
+	<role name="traceboxadmin"/>
+	<tablespace name="tracebox"/>
+	<position x="472.308" y="1251.46"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Nome do Usuário]]></comment>
+	</column>
+	<column name="federal_tax" not-null="true">
+		<type name="varchar" length="11"/>
+		<comment><![CDATA[CPF
+]]></comment>
+	</column>
+	<column name="mobile_phone" not-null="true">
+		<type name="varchar" length="14"/>
+		<comment><![CDATA[Celular (Mobile Phone)]]></comment>
+	</column>
+	<column name="address_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="client_pk" type="pk-constr" table="transportadora.client">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="federal_tax11" type="uq-constr" table="transportadora.client">
+		<columns names="federal_tax" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="mobile_phone" type="uq-constr" table="transportadora.client">
+		<columns names="mobile_phone" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="address" layer="0" collapse-mode="2" max-obj-count="10" z-value="0">
+	<schema name="transportadora"/>
+	<role name="traceboxadmin"/>
+	<tablespace name="tracebox"/>
+	<position x="1020.14" y="1237.82"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="country" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Pais (Country)]]></comment>
+	</column>
+	<column name="state_uf" not-null="true">
+		<type name="varchar" length="2"/>
+		<comment><![CDATA[Estado (State) - Sigla da UF]]></comment>
+	</column>
+	<column name="city" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Cidade (City)]]></comment>
+	</column>
+	<column name="street" not-null="true">
+		<type name="varchar" length="255"/>
+		<comment><![CDATA[Logradouro]]></comment>
+	</column>
+	<column name="number">
+		<type name="numeric" length="6"/>
+		<comment><![CDATA[Numero (Number)]]></comment>
+	</column>
+	<column name="neighborhood" not-null="true">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Bairro (Neighborhood)]]></comment>
+	</column>
+	<column name="reference">
+		<type name="varchar" length="255"/>
+		<comment><![CDATA[Referência (Reference)]]></comment>
+	</column>
+	<column name="zip" not-null="true">
+		<type name="numeric" length="8"/>
+		<comment><![CDATA[CEP (Zip)]]></comment>
+	</column>
+	<constraint name="address_pk" type="pk-constr" table="transportadora.address">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<schema name="tracebox_cp" layer="0" rect-visible="true" fill-color="#ffff7f">
+	<role name="traceboxadmin"/>
+	<comment><![CDATA[Schema para o database do "tracebox" server no PostgreSQL]]></comment>
+</schema>
+
+<table name="package" layer="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="transportadora"/>
+	<role name="traceboxadmin"/>
+	<tablespace name="tracebox"/>
+	<position x="472.896" y="361.814"/>
+	<column name="id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="barcode" not-null="true">
+		<type name="varchar" length="255"/>
+		<comment><![CDATA[Ultimo Número Sequencial do Transportador para geração da identificação exclusiva e serializada de unidades logísticas. (UnitLoad / Unitizador / Unidade de Transporte).
+Ex:
+
+
+* Tipo: "K" + Chave NFe (44N) + Unitizador (9N) --> Impressão após ter NFe via WEB ou MOBILE   
+* Tipo: "A" + CNPJ (14N) + Order (9C ou 9N) + Unitizador (9N) --> Impressão via WEB / API / mYWMS
+* Tipo: "C" + CPF (11N) + LastNumber User +  Unitizador (9N) --> Impressão via MOBILE
+* Tipo: "G" + SSCC (18N) --> Já impresso pelos sistemas do emitente/transportador. Utiliza rotina "Associar SSCC" 
+
+Serial Shipping Container Code (SSCC) can be used by companies to identify a logistic unit.
+Chave Global para a identificação exclusiva e serializada de unidades logísticas
+
+Padrão traceBox é diferente do SSCC da GS1.
+Em caso de adotar GS1-SSCC o tipo é "G".]]></comment>
+	</column>
+	<column name="risk_class">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[Classe de Risco dos materiais contidos na Unidade de Transporte - Unidade Logística (Unitizador)]]></comment>
+	</column>
+	<column name="tracking_code" not-null="true">
+		<type name="varchar" length="12"/>
+	</column>
+	<column name="category">
+		<type name="varchar" length="30"/>
+		<comment><![CDATA[The category of main products contained in the box/unitload.
+A categoria predominante de produtos contidos na caixa/unitizador.]]></comment>
+	</column>
+	<column name="client_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="package_pk" type="pk-constr" table="transportadora.package">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="tracking_code" type="uq-constr" table="transportadora.package">
+		<columns names="tracking_code" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="shipment_package" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="transportadora"/>
+	<role name="postgres"/>
+	<position x="567.346" y="775.907"/>
+	<column name="id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="price">
+		<type name="numeric" length="4" precision="2"/>
+	</column>
+	<column name="package_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="shipment_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="shipment_package_pk" type="pk-constr" table="transportadora.shipment_package">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="shipment_vehicle" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="transportadora"/>
+	<role name="postgres"/>
+	<position x="872.152" y="382.693"/>
+	<column name="id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="shipment_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="vehicle_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="shipment_vehicle_pk" type="pk-constr" table="transportadora.shipment_vehicle">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="driver" layer="0" collapse-mode="2" pagination="true" attribs-page="0" ext-attribs-page="0" max-obj-count="6" z-value="0">
+	<schema name="transportadora"/>
+	<role name="postgres"/>
+	<position x="1472.47" y="778.013"/>
+	<column name="id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="license" not-null="true">
+		<type name="numeric" length="15"/>
+	</column>
+	<column name="license_valid" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="transporter_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="vehicle_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="driver_pk" type="pk-constr" table="transportadora.driver">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="license" type="uq-constr" table="transportadora.driver">
+		<columns names="license" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="shipper_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.client" table="transportadora.shipment">
+	<columns names="shipper_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="destinator_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.client" table="transportadora.shipment">
+	<columns names="destinator_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="transporter_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.transporter" table="transportadora.shipment">
+	<columns names="transporter_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="address_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.address" table="transportadora.client">
+	<columns names="address_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="client_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.client" table="transportadora.package">
+	<columns names="client_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="package_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.package" table="transportadora.shipment_package">
+	<columns names="package_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="shipment_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.shipment" table="transportadora.shipment_package">
+	<columns names="shipment_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="vehicle_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.vehicle" table="transportadora.shipment_vehicle">
+	<columns names="vehicle_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="shipment_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.shipment" table="transportadora.shipment_vehicle">
+	<columns names="shipment_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="transporter_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.transporter" table="transportadora.driver">
+	<columns names="transporter_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="vehicle_id" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="transportadora.vehicle" table="transportadora.driver">
+	<columns names="vehicle_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_shipment_transporter" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment"
+	 dst-table="transportadora.transporter" reference-fk="transporter_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="3.05864" y="-28.3285"/>
+	</label>
+</relationship>
+
+<relationship name="rel_shipment_user1" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment"
+	 dst-table="transportadora.client" reference-fk="shipper_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-52.4145" y="3.10572"/>
+	</label>
+</relationship>
+
+<relationship name="rel_shipment_user2" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment"
+	 dst-table="transportadora.client" reference-fk="destinator_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="13.3336" y="22.7942"/>
+	</label>
+</relationship>
+
+<relationship name="rel_package_shipment_package" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment_package"
+	 dst-table="transportadora.package" reference-fk="package_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="44.9676" y="-16.7225"/>
+	</label>
+</relationship>
+
+<relationship name="rel_shipment_package_shipment" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment_package"
+	 dst-table="transportadora.shipment" reference-fk="shipment_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="rel_package_user" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.package"
+	 dst-table="transportadora.client" reference-fk="client_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-4.79248" y="80.8819"/>
+	</label>
+</relationship>
+
+<relationship name="rel_shipment_vehicle_vehicle" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment_vehicle"
+	 dst-table="transportadora.vehicle" reference-fk="vehicle_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="rel_shipment_vehicle_shipment" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.shipment_vehicle"
+	 dst-table="transportadora.shipment" reference-fk="shipment_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="rel_driver_transporter" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.driver"
+	 dst-table="transportadora.transporter" reference-fk="transporter_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+<relationship name="rel_driver_vehicle" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.driver"
+	 dst-table="transportadora.vehicle" reference-fk="vehicle_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="-26.3448" y="163.738"/>
+	</label>
+</relationship>
+
+<relationship name="rel_user_address" type="relfk" layer="0"
+	 custom-color="#000000"
+	 src-table="transportadora.client"
+	 dst-table="transportadora.address" reference-fk="address_id"
+	 src-required="false" dst-required="true">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
+
+</dbmodel>
