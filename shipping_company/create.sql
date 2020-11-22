@@ -83,6 +83,17 @@ CREATE TABLE shipment(
 	FOREIGN KEY(transporter_id) REFERENCES transporter(id)
 );
 
+CREATE TABLE log_delivered(
+	id INTEGER NOT NULL,
+    shipper_id INTEGER NOT NULL,
+    destinator_id INTEGER NOT NULL,
+    transporter_id INTEGER NOT NULL,
+	PRIMARY KEY(id),
+	FOREIGN KEY(shipper_id) REFERENCES client(id),
+	FOREIGN KEY(destinator_id) REFERENCES client(id),
+	FOREIGN KEY(transporter_id) REFERENCES transporter(id)
+);
+
 CREATE TABLE shipment_package(
 	id INTEGER NOT NULL,
     price NUMERIC(4,2),
