@@ -1,1 +1,1 @@
-# sql-codes
+# sql-scripts
